@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  user-service:
+    build: user-service
+    image: user-service-masterskaya-image
+    container_name: user-service-masterskaya-container
+    ports:
+      - "8081:8080"
+    depends_on:
+      - user-service-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-service-db:5432/users
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=0000
+      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+
+  user-service-db:
+    image: postgres:14-alpine
+    container_name: user-service-db-masterskaya-container
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_DB=users
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=0000
+
