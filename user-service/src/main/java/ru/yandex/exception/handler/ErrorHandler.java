@@ -32,6 +32,14 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncomingParametersNotValidException(ConstraintViolationException e) {
+        log.warn("{}", e.getMessage());
+        return new ErrorResponse("Ошибка валидации входных параметров Constraint",
+                e.getConstraintViolations().iterator().next().getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationExceptionException(IncorrectParameterException e) {
         log.warn("{}", e.getMessage());
         return new ErrorResponse("Ошибка валидации входных параметров.",

@@ -1,11 +1,10 @@
 package ru.yandex.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.model.dto.UserCreateDTO;
 import ru.yandex.model.dto.UserPasswordDTO;
@@ -15,13 +14,13 @@ import ru.yandex.service.UserService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static ru.yandex.constants.Constatnts.X_USER_ID;
 
 
 @RestController
 @AllArgsConstructor
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -39,10 +38,11 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public UserResponseDTO getUserById(@PathVariable Long id,
+    public UserResponseDTO getUserById(@PathVariable @Min(value = 1, message = "Id не должно быть меньше 1") Long id,
                                        @RequestHeader(value = X_USER_ID, required = false) Long headerUserId) {
         return userService.getUserById(id, headerUserId);
     }
+
 
     @GetMapping("/users")
     public List<UserResponseDTO> getAllUsers(@RequestParam(defaultValue = "0") int page,
