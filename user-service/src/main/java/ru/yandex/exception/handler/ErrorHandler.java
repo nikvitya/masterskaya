@@ -27,7 +27,15 @@ public class ErrorHandler {
     public ErrorResponse handleMethodArgumentNotValidException(Exception e) {
         log.warn("{}", e.getMessage());
         return new ErrorResponse("Ошибка валидации входных параметров",
-                e.getMessage());
+                e.getLocalizedMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncomingParametersNotValidException(ConstraintViolationException e) {
+        log.warn("{}", e.getMessage());
+        return new ErrorResponse("Ошибка валидации входных параметров Constraint",
+                e.getLocalizedMessage());
     }
 
     @ExceptionHandler
