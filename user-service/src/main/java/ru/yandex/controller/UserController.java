@@ -38,10 +38,11 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public UserResponseDTO getUserById(@PathVariable @Min(value = 1) Long id,
+    public UserResponseDTO getUserById(@PathVariable @Min(value = 1, message = "Id не должно быть меньше 1") Long id,
                                        @RequestHeader(value = X_USER_ID, required = false) Long headerUserId) {
         return userService.getUserById(id, headerUserId);
     }
+
 
     @GetMapping("/users")
     public List<UserResponseDTO> getAllUsers(@RequestParam(defaultValue = "0") int page,
