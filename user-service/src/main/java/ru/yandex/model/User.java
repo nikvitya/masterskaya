@@ -1,8 +1,11 @@
 package ru.yandex.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +25,11 @@ public class User {
 
     private String name;
 
-    @Column(name ="e_mail")
+    @Column(name = "e_mail")
     private String email;
 
     private String password;
 
-    @Column(name ="about_me")
+    @Column(name = "about_me")
     private String aboutMe;
 }
