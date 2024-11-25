@@ -1,6 +1,11 @@
 package ru.yandex.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 import ru.yandex.model.User;
 import ru.yandex.model.dto.UserCreateDTO;
 import ru.yandex.model.dto.UserFullResponseDTO;
@@ -17,6 +22,7 @@ public interface UserMapper {
     UserCreateDTO toDTO(User user);
 
     UserResponseDTO toResponseDTO(User user);
+
     UserFullResponseDTO toFullResponseDTO(User user);
 
 
