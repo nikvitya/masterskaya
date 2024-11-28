@@ -28,7 +28,7 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Checkstyle
-      uses: dorny/checkstyle@v2
+      uses: actions/checkout@v4
       with:
         config_file: checkstyle.xml # Путь к вашему checkstyle.xml
         #Можно изменить уровень серьезности ошибки, по умолчанию это ошибка
