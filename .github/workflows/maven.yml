@@ -27,6 +27,12 @@ jobs:
         java-version: '21'
         distribution: 'corretto'
         cache: maven
+    - name: Checkstyle
+      uses: dorny/checkstyle@v2
+      with:
+        config_file: checkstyle.xml # Путь к вашему checkstyle.xml
+        #Можно изменить уровень серьезности ошибки, по умолчанию это ошибка
+        # severity: warning
     - name: Build with Maven
       run: |
         mvn -B package --file pom.xml
