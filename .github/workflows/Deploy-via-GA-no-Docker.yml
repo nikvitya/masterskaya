@@ -26,9 +26,15 @@ jobs:
       run: mvn -B package -DskipTests
     - name: Deploy to Server
       run: |
-        ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} << EOF
-        mkdir -p /home/java-team3-1/nikvitya/app
-        scp -p ./user-service/target/user-service-1.0.0.jar /home/java-team3-1/nikvitya/app
-        cd /home/java-team3-1/nikvitya/app && nohup java -jar user-service-1.0.0.jar > /home/java-team3-1/nikvita/app/app.log 2>&1 &
-        exit 0
+        ssh -i ${{ secrets.PRIVATE_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} << EOF
+          mkdir -p /home/java-team3-1/app
+          # Critically important: Check if the JAR file already exists
+          if [[ ! -f /home/java-team3-1/app/user-service-*.jar ]]; then
+            # Copy the JAR to the server
+            scp -p ./target/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/app/
+          fi
+          # IMPORTANT: Use the correct JAR filename.
+          cd /home/java-team3-1/app &&
+          nohup java -jar user-service-1.0.0.jar > /home/java-team3-1/app/app.log 2>&1 &
+          echo "Deployment complete."
         EOF
