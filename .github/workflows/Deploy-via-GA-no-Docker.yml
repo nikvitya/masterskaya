@@ -36,4 +36,4 @@ jobs:
         mkdir -p /home/java-team3-1/nikvitya/appNoDocker
         scp -p staging/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/nikvitya/appNoDocker/
         cd /home/java-team3-1/nikvitya/appNoDocker && nohup java -jar user-service-*.jar > /home/java-team3-1/nikvitya/appNoDocker/app.log 2>&1 &
-    "
+      "
