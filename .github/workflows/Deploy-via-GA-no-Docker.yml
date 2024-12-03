@@ -30,6 +30,6 @@ jobs:
       run: |
         ssh -i ${{ secrets.PRIVATE_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}  << EOF
         mkdir -p /home/java-team3-1/nikvitya/appNoDocker
-        scp -P ${{ secrets.SERVER_PORT }} ./target/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/nikvitya/appNoDocker
+        scp -P ${{ secrets.SERVER_PORT }} ./user-service/target/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/nikvitya/appNoDocker
         ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "cd /home/java-team3-1/nikvitya/appNoDocker && nohup java -jar user-service-*.jar > /home/java-team3-1/nikvitya/appNoDocker/app.log 2>&1 &"
         EOF
