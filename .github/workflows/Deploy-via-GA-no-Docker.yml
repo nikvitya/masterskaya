@@ -1,0 +1,36 @@
+name: Deploy JavaApp via Github Actions without Docker containers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'corretto'
+        cache: maven
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven-
+    - name: Build with Maven
+      run: mvn -B package -DskipTests
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          mkdir -p /home/java-team3-1/app
+          scp -P ${{ secrets.SERVER_PORT }} ./target/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/app/
+          ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "cd /home/java-team3-1/app && nohup java -jar user-service-*.jar > /home/java-team3-1/app/app.log 2>&1 &"
