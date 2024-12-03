@@ -27,7 +27,6 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -DskipTests
     - name: Deploy to Server
-      if: steps.build.outcome == 'success'
       run: |
         ssh -i ${{ secrets.PRIVATE_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}  << EOF
         mkdir -p /home/java-team3-1/nikvitya/appNoDocker
