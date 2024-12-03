@@ -4,15 +4,13 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
@@ -25,15 +23,21 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-maven-
     - name: Build with Maven
-      run: |
-        mvn -B package --file pom.xml
-        mkdir staging
-        cp user-service/target/*.jar staging
+      run: mvn -B package -DskipTests
+    - name: Create Staging Directory
+      run: mkdir -p target/staging
+    - name: Copy JAR to Staging
+      run: cp target/user-service-*.jar target/staging/
     - name: Deploy to Server
-      if: steps.build.outcome == 'success'
-      run: |
-       ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "
-        mkdir -p /home/java-team3-1/nikvitya/appNoDocker
-        scp -p staging/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/nikvitya/appNoDocker/
-        cd /home/java-team3-1/nikvitya/appNoDocker && nohup java -jar user-service-*.jar > /home/java-team3-1/nikvitya/appNoDocker/app.log 2>&1 &
-      "
+      uses: appleboy/ssh-action@v3
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: |
+          mkdir -p /home/java-team3-1/nikvitya/appNoDocker
+          scp -p target/staging/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/nikvitya/appNoDocker/
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "cd /home/java-team3-1/nikvitya/appNoDocker && nohup java -jar user-service-*.jar > /home/java-team3-1/nikvitya/appNoDocker/app.log 2>&1 &"
+      env:
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
