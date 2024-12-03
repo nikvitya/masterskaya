@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -31,6 +33,6 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
         script: |
-          mkdir -p /home/java-team3-1/app
-          scp -P ${{ secrets.SERVER_PORT }} ./target/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/app/
+          mkdir -p /home/java-team3-1/nikvitya/appNoDocker
+          scp -P ${{ secrets.SERVER_PORT }} ./user-service/target/user-service-*.jar ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/home/java-team3-1/nikvitya/appNoDocker
           ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "cd /home/java-team3-1/app && nohup java -jar user-service-*.jar > /home/java-team3-1/app/app.log 2>&1 &"
