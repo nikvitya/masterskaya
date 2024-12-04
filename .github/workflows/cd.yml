@@ -20,4 +20,7 @@ jobs:
           SCRIPT_BEFORE: |
             whoami
             ls -al
+            docker compose down
+            docker compose up
           SCRIPT_BEFORE_REQUIRED: true
+
