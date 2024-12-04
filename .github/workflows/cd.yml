@@ -22,6 +22,6 @@ jobs:
             ls -al
           SCRIPT_AFTER: |
             docker compose down
-            docker compose up
+            docker compose up -d
           SCRIPT_BEFORE_REQUIRED: true
 
