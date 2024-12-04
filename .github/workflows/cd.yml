@@ -21,6 +21,7 @@ jobs:
             whoami
             ls -al
           SCRIPT_AFTER: |
+            cd nikvitya2
             docker compose down
             docker compose up -d
           SCRIPT_BEFORE_REQUIRED: true
