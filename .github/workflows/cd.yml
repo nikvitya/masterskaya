@@ -21,7 +21,7 @@ jobs:
             whoami
             ls -al
           SCRIPT_AFTER: |
-            cd nikvitya2
+            cd ${{ vars.REMOTE_DIR_DEPLOY }}
             sudo docker stop user-service-masterskaya-container
             sudo docker rm -f user-service-masterskaya-container
             sudo docker-compose up -d
