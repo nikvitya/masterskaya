@@ -21,8 +21,8 @@ jobs:
             whoami
             ls -al
           SCRIPT_AFTER: |
-            cd nikvitya2
-            sudo docker compose down
+            cd ${{ vars.REMOTE_DIR_DEPLOY }}
+            sudo docker compose down user-service-masterskaya-container
             sudo docker compose up -d
           SCRIPT_BEFORE_REQUIRED: true
 
