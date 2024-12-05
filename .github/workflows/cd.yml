@@ -1,5 +1,5 @@
 ---
-name: Deploy on server via docker
+name: Deploy on server via copy from gihub
 on:
   push:
     branches:
