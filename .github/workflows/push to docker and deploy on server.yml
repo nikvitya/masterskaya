@@ -1,0 +1,63 @@
+name: Push to docker and deploy on server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: maven
+          
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+        
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push to DockerHub
+        uses: docker/build-push-action@v3
+        with:
+          context: ./user-service
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_CONTAINER_NAME }}
+
+
+      - name: Deploy to Staging server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER:  ${{ secrets.SSH_USER }}
+          TARGET: ${{ vars.REMOTE_DIR_DEPLOY2 }}
+          SCRIPT_BEFORE: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_CONTAINER_NAME }}
+            ls -al
+          SCRIPT_AFTER: |
+            cd ${{ vars.REMOTE_DIR_DEPLOY2 }}
+            sudo docker stop user-service-masterskaya-container
+            sudo docker rm -f user-service-masterskaya-container
+            sudo docker-compose up -d
+          SCRIPT_BEFORE_REQUIRED: true
+
+
+          
