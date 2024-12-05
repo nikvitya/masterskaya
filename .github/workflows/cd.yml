@@ -1,5 +1,5 @@
 ---
-name: Deploy on server via copy from gihub
+name: Deploy on server via copy from GitHub
 on:
   push:
     branches:
