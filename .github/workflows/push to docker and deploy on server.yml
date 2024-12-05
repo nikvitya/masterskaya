@@ -56,7 +56,7 @@ jobs:
             cd ${{ vars.REMOTE_DIR_DEPLOY2 }}
             sudo docker stop user-service-masterskaya-container
             sudo docker rm -f user-service-masterskaya-container
-            sudo docker-compose up -d
+            sudo docker run -d user-service-masterskaya-container
           SCRIPT_BEFORE_REQUIRED: true
 
 
