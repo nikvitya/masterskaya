@@ -24,6 +24,7 @@ jobs:
             cd ${{ vars.REMOTE_DIR_DEPLOY }}
             sudo docker stop user-service-masterskaya-container
             sudo docker rm -f user-service-masterskaya-container
+            mvn -B package --file pom.xml
             sudo docker-compose up -d
           SCRIPT_BEFORE_REQUIRED: true
 
