@@ -84,6 +84,14 @@ public class UserController {
     }
 
     @Operation(
+            summary = "Получение пользователя по email"
+    )
+    @GetMapping("/users/email")
+    public UserResponseDTO findByEmail(@RequestParam String email) {
+        return userService.findByEmail(email);
+    }
+
+    @Operation(
             summary = "Удаление пользователя",
             description = " userId (кто делает запрос) берем из header и проверяем верность введенного пароля"
     )

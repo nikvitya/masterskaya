@@ -75,6 +75,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponseDTO findByEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("Email не может быть null или пустым");
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+
+        return userMapper.toResponseDTO(user);
+    }
+
+    @Override
     public ResponseEntity<Map<String, String>> delete(Long headerUserId, UserPasswordDTO userPasswordDTO) {
         checkHeaderUserId(headerUserId);
 
