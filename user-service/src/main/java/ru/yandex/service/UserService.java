@@ -19,4 +19,6 @@ public interface UserService {
     ResponseEntity<Map<String, String>> delete(Long headerUserId, UserPasswordDTO userPasswordDTO);
 
     List<UserResponseDTO> getAllUsers(int page, int size);
+
+    UserResponseDTO findByEmail(String email);
 }
